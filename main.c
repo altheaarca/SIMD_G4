@@ -1,10 +1,16 @@
 // Group 4 : Arca, Co Chiong, Uy [S11]
 #include <stdio.h>
 #include <stdlib.h>
+#include<math.h>
 #include <time.h>
 #include "kernel.h"
+
+extern void x86(int n, double* x, double* y);
+extern void stencil_1D_xmm_SIMD(int n, double* X, double* Y);
+extern void stencil_1D_ymm_SIMD(int n, double* X, double* Y);
+
 int main() {
-    int vLength = 8; //TODO:  replace : 1 << 20 
+    int vLength = 20 ;//1 << 20
     int i;
     double time;
     clock_t start, end;
@@ -28,15 +34,8 @@ int main() {
 
     // Array initialization
     printf("Enter %d elements for vector X:\n", vLength);
-    for (i = 0; i < vLength; i++) {
-        if (scanf_s("%lf", &X[i]) != 1) {
-            printf("Invalid input.\n");
-            free(X);
-            free(Y);
-            free(answer);
-            return 1;
-        }
-    }
+    initialize_vector(X, vLength);
+    display_initialized(X, vLength);
 
     // Time measurement for C version
     start = clock();
@@ -52,7 +51,7 @@ int main() {
     x86(vLength, X, Y);
     end = clock();
     time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("Time taken for x86 (Non-SIMD): %.6lf seconds\n", time);
+    printf("Time taken for x86 (Non-SIMD): %g seconds\n", time);
     display_vector(Y, vLength);
 
     // SIMD XMM Kernel
@@ -61,7 +60,7 @@ int main() {
     stencil_1D_xmm_SIMD(vLength, X, Y);
     end = clock();
     time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("Time taken for SIMD XMM: %.6lf seconds\n", time);
+    printf("Time taken for SIMD XMM: %g seconds\n", time);
     display_vector(Y, vLength);
 
     // SIMD YMM Kernel
@@ -70,7 +69,7 @@ int main() {
     stencil_1D_ymm_SIMD(vLength, X, Y);
     end = clock();
     time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("Time taken for SIMD YMM: %.6lf seconds\n", time);
+    printf("Time taken for SIMD YMM: %g seconds\n", time);
     display_vector(Y, vLength);
 
     // Run and display results for assembly kernels

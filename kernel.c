@@ -1,6 +1,7 @@
 #include "kernel.h"
 #include <stdio.h>
-
+#include <stdlib.h>
+#include<math.h>
 void compute_kernel(double* X, double* Y, int n) {
     int i;
     for (i = 3; i < n; i++) {
@@ -23,6 +24,19 @@ void display_vector(double* Y, int n) {
             printf("%.2f ", Y[i]);
         }
         printf("\n");
+    }
+}
+//----------for initializing----------//
+void initialize_vector(double* X, int n) {
+    int i; 
+    for ( i = 0; i < n; i++) {
+        X[i] = (double)(rand() % 10);  // random values as elements 
+    }
+}
+void display_initialized(double* X, int n) {
+    int i;
+    for (i = 0; i < n; i++) {
+        printf("%g ",X[i]);  // random values as elements 
     }
 }
 //-----------for checking-------------// 
