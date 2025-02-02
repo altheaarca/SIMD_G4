@@ -1,4 +1,4 @@
-;;Group 4 : Arca, Co Chiong, Uy [S11]
+;Group 4 : Arca, Co Chiong, Uy [S11]
 ; SIMD x86 assembly language using XMM register
 section .text
 bits 64

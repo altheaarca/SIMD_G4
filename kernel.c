@@ -25,3 +25,14 @@ void display_vector(double* Y, int n) {
         printf("\n");
     }
 }
+//-----------for checking-------------// 
+// 
+// Comparison function for vectors with a tolerance
+int compare_vectors(double* vec1, double* vec2, int n, double tolerance) {
+    for (int i = 0; i < n; i++) {
+        if (fabs(vec1[i] - vec2[i]) > tolerance) {
+            return 0; // Return false if any element differs by more than the tolerance
+        }
+    }
+    return 1; // Return true if all elements are within the tolerance
+}

@@ -1,3 +1,5 @@
+;Group 4 : Arca, Co Chiong, Uy [S11]
+; NON-SIMD assembly language 
 section .text
 bits 64
 default rel
