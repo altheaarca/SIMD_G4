@@ -1,9 +1,3 @@
-; Group 4: Arca, Co Chiong, Uy [S11]
-; Non-SIMD x86-64 assembly language
-
-section .data
-Text1 db "X1: %d", 10, 0
-
 section .text
 bits 64
 default rel
@@ -16,60 +10,62 @@ x86:
     push rbp
     mov rbp, rsp
 
-    ; n - number of elements in vector
-    ; rbx - address of X (double* X)
-    ; rcx - address of Y (double* Y)
-    mov rsi, rdx   ; rdx (n) -> rsi (vector length)
-    mov rbx, r8    ; r8 (X) -> rbx (address of X)
-    mov rcx, r9    ; r9 (Y) -> rcx (address of Y)
+    ; n - number of digits 
+    ; rbx address of x
+    ; rcx address of y
+    mov rsi, rcx   ; rcx (n) to rsi
+    mov rbx, rdx   ; rdx (x) to rbx
+    mov rcx, r8   ; r8 (y) to rcx
 
-    ; index for the loop
-    xor r8, r8     ; r8 = 0 (loop index i)
-    xor r9, r9     ; r9 = 0 (index for Y)
+    ; index of loop
+    xor r8, r8
+    ; index of y
+    xor r9, r9
 
-loop_start:
-    ; When the index i is less than 3, skip
+loop:
+    ; rdx is reusable
+    ; When it is less than 3 jump to increment
     cmp r8, 3
-    jl increment
+    jle increment
 
-    ; Check if there are fewer than 3 elements left in the range (handle boundary)
+    ; When there is less than 3 number left jump to end
     mov rdx, rsi
     sub rdx, 3
     cmp r8, rdx
-    jge end_loop
+    jge end
 
-    ; Calculate Y[i] = X[i-3] + X[i-2] + X[i-1] + X[i] + X[i+1] + X[i+2] + X[i+3]
-    ; Load X[i-3] (index = r8-3), X[i-2], X[i-1], X[i], X[i+1], X[i+2], X[i+3]
-    ; Offset by 8 bytes per double
-    movsd xmm0, [rbx + 8*(r8-3)]  ; X[i-3]
-    movsd xmm1, [rbx + 8*(r8-2)]  ; X[i-2]
-    movsd xmm2, [rbx + 8*(r8-1)]  ; X[i-1]
-    movsd xmm3, [rbx + 8*r8]      ; X[i]
-    movsd xmm4, [rbx + 8*(r8+1)]  ; X[i+1]
-    movsd xmm5, [rbx + 8*(r8+2)]  ; X[i+2]
-    movsd xmm6, [rbx + 8*(r8+3)]  ; X[i+3]
+    ; add all the float value
+    fld qword [rbx+ 8*r8]
+    fld qword [rbx+ 8*r8 - 8*1]
+    fld qword [rbx+ 8*r8 - 8*2]
+    fld qword [rbx + 8*r8 - 8*3]
+    xor rdx, rdx
+    call addAll
+    fld qword [rbx + 8*r8 + 8*1]
+    fld qword [rbx+ 8*r8 + 8*2]
+    fld qword [rbx + 8*r8 + 8*3]
+    xor rdx, rdx
+    call addAll
 
-    ; Add all the values
-    addsd xmm0, xmm1
-    addsd xmm0, xmm2
-    addsd xmm0, xmm3
-    addsd xmm0, xmm4
-    addsd xmm0, xmm5
-    addsd xmm0, xmm6
-
-    ; Store the result in Y[i]
-    movsd [rcx + 8*r9], xmm0
-
-    ; Increment Y index
+    ; store to the address of y and increment
+    fstp qword [rcx + 8*r9]
     inc r9
+    jmp increment
 
 increment:
-    ; Increment loop index
+    ; increment the loop
     inc r8
-    jmp loop_start
+    jmp loop
 
-end_loop:
+end:
     ; Function epilogue
     mov rsp, rbp
     pop rbp
+    ret
+
+addAll:
+    fadd
+    inc rdx
+    cmp rdx, 3
+    jne addAll
     ret
