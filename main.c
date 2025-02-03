@@ -57,7 +57,6 @@ int main() {
         end = clock();
         time += ((double)(end - start)) / CLOCKS_PER_SEC;
     }
-    display_vector(Y, vLength);
     printf("Time taken for NON-SIMD: %g seconds\n", time);
     // SIMD XMM kernel
     printf("\n[Running SIMD Assembly Kernel XMM Register]\n");
@@ -69,7 +68,6 @@ int main() {
         end = clock();
         time += ((double)(end - start)) / CLOCKS_PER_SEC;
     }
-    display_vector(Y, vLength);
     printf("Time taken for SIMD XMM: %g seconds\n", time);
 
     // SIMD YMM Kernel
@@ -82,14 +80,13 @@ int main() {
         end = clock();
         time += ((double)(end - start)) / CLOCKS_PER_SEC;
     }
-   // display_vector(Y, vLength);
     printf("Time taken for SIMD YMM: %g seconds\n", time);
 
     // Run and display results for assembly kernels
     memcpy(Y, answer, vLength * sizeof(double)); // Restore reference values before running next test
     printf("\n[Running Non-SIMD Assembly Kernel]\n");
     x86(vLength, X, Y);
-   // display_vector(Y, vLength);
+    //display_vector(Y, vLength);
     if (compare_vectors(Y, answer, vLength, 1e-6)) {
         printf("Non-SIMD assembly kernel result matches C reference!\n");
     }
@@ -100,7 +97,7 @@ int main() {
 
     printf("\n[Running SIMD Assembly Kernel XMM Register ]\n");
     stencil_1D_xmm_SIMD(vLength, X, Y);
-  //  display_vector(Y, vLength);
+    display_vector(Y, vLength);
     if (compare_vectors(Y, answer, vLength, 1e-6)) {
         printf("SIMD XMM assembly kernel result matches C reference!\n");
     }
@@ -111,7 +108,7 @@ int main() {
 
     printf("\n[Running SIMD Assembly Kernel YMM Register]\n");
     stencil_1D_ymm_SIMD(vLength, X, Y);
-   // display_vector(Y, vLength);
+    display_vector(Y, vLength);
     if (compare_vectors(Y, answer, vLength, 1e-6)) {
         printf("SIMD YMM assembly kernel result matches C reference!\n");
     }
