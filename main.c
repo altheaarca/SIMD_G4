@@ -15,7 +15,7 @@ int main() {
     double time;
     clock_t start, end;
     double* answer = (double*)malloc(vLength * sizeof(double));
-
+   
     if (!answer) {
         printf("Memory allocation for answer failed.\n");
         return 1;
@@ -109,6 +109,7 @@ int main() {
     printf("[--------------- C (2^26) ----------------]\n");
     // Array initialization
     vLength = 1 << 26;
+    resize_arrays(&X, &Y, &answer, vLength);
     printf("Enter %d elements for vector X:\n", vLength);
     initialize_vector(X, vLength);
     //display_initialized(X, vLength); //for checking
@@ -180,6 +181,7 @@ int main() {
     }
     printf("[--------------- C (2^30) ----------------]\n");
     vLength = 30;
+    resize_arrays(&X, &Y, &answer, vLength);
     // Array initialization
     printf("Enter %d elements for vector X:\n", vLength);
     initialize_vector(X, vLength);

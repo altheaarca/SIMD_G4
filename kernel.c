@@ -33,6 +33,19 @@ void initialize_vector(double* X, int n) {
         X[i] = (double)(rand() % 10);  // random values as elements 
     }
 }
+void resize_arrays(double** X, double** Y, double** answer, int vLength) { // AHA
+    *X = (double*)realloc(*X, vLength * sizeof(double));
+    *Y = (double*)realloc(*Y, vLength * sizeof(double));
+    *answer = (double*)realloc(*answer, vLength * sizeof(double));
+
+    if (!*X || !*Y || !*answer) {
+        printf("Memory reallocation failed.\n");
+        free(*X);
+        free(*Y);
+        free(*answer);
+        exit(1);
+    }
+}
 void display_initialized(double* X, int n) {
     int i;
     for (i = 0; i < n; i++) {
